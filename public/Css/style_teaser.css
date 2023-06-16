@@ -1,0 +1,30 @@
+@font-face {
+    font-family: 'Iceland';
+    src: url("../Fonts/Iceland-Regular.ttf") format("truetype");
+}
+body {
+    background-image: url('../Imgs/background_event.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#countDown {
+    font-family: 'Iceland', serif;
+    text-align: center;
+    font-size: 48px;
+    color: white;
+}
+
+@media screen and (max-width: 600px) {
+    #countDown {
+        font-size: 1.5rem;
+    }
+}
+
