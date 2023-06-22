@@ -1,9 +1,4 @@
-@font-face {
-    font-family: 'Iceland';
-    src: url("../Fonts/Iceland-Regular.ttf") format("truetype");
-}
 body {
-    background-image: url('../Imgs/background_event.jpg');
     background-size: cover;
     background-position: center;
 }
@@ -16,7 +11,6 @@ main {
 }
 
 #countDown {
-    font-family: 'Iceland', serif;
     text-align: center;
     font-size: 48px;
     color: white;

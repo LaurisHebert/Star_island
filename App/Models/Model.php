@@ -2,10 +2,6 @@
 namespace Models;
 class Model
 {
-    public function getArray(): array
-    {
-        return get_object_vars($this);
-    }
     public static function cleanUpValues(array $allValues): array
     {
         foreach ($allValues as $key => $value) {
@@ -17,5 +13,4 @@ class Model
         }
         return $allValues;
     }
-
 }

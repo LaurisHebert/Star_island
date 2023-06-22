@@ -6,193 +6,121 @@ use Utils\Database\PdoDb;
 
 class EventModel extends Model
 {
-    private int $id;
-    private string $start_date;
-    private string $end_date;
-    private string $importance;
-    private string $title;
-    private string $description;
-    private string $meta_title;
-    private array $media;
+    public int $id;
+    public string $start_date;
+    public string $end_date;
+    public string $title;
+    public string $description;
+    public string $meta_title;
+    public array $media;
 
-    public function setMetaTitle(string $meta_title): void
+    function __construct(array $data)
     {
-        $this->meta_title = $meta_title;
-    }
-    function __construct(array $data){
         $this->id = $data['id'];
+        $this->title = $data['title'];
         $this->start_date = $data['start_date'];
         $this->end_date = $data['end_date'];
-        $this->importance = $data['importance'];
-        $this->title = $data['title'];
         $this->description = $data['description'];
         $this->meta_title = $data['meta_title'];
         $this->media = $data['media'];
     }
-    static function getEvents(string $importance = "MEDIUM")
+
+    static function getEvents()
     {
         $bdd = PdoDb::getInstance();
 
-        // récupération des événements
-        $sqlEvents = "
-            SELECT e.id, start_date, end_date, importance, title, description, p.meta_title FROM event e 
+        $sql = "
+            SELECT e.id,
+                   c.title,
+                   p.meta_title
+            
+            FROM event e 
+                
             INNER JOIN event_content 		AS ec 		ON ec.event_id = e.id 
             INNER JOIN content 				AS c 		ON c.id = ec.content_id
             INNER JOIN page 				AS p 		ON p.id = c.page_id
-            WHERE start_date < NOW() 
-            AND end_date > NOW() 
-            AND importance = '$importance'
+            
+            WHERE e.start_date < NOW() AND NOW() < e.end_date  
+            
             ORDER BY e.start_date DESC
         ";
 
-        $events = $bdd->select($sqlEvents);
+        return $bdd->select($sql);
+    }
 
-        foreach ($events as $key => $event) {
+    static function getEvent(int $id)
+    {
+        $bdd = PdoDb::getInstance();
+
+        $sqlEvents = "
+            SELECT e.id, e.start_date, e.end_date, c.title, c.description, p.meta_title, p.meta_description
             
-            $sqlMedia = "
-                SELECT name, path, title, p.meta_title FROM page p
-
-                INNER JOIN media				AS m		ON m.pages_id = p.id
-                INNER JOIN media_media_type		AS mmt		ON mmt.media_id = m.id
-                INNER JOIN media_type			AS mt 		ON mt.id = mmt.media_type_id
+            FROM event e 
                 
-                WHERE p.meta_title = '$event[meta_title]' OR p.meta_title = 'All'
-            ";
-            $eventArray['media'] = $bdd->select($sqlMedia);
+            INNER JOIN event_content 		AS ec 		ON ec.event_id = e.id 
+            INNER JOIN content 				AS c 		ON c.id = ec.content_id
+            INNER JOIN page 				AS p 		ON p.id = c.page_id
+            
+            WHERE e.id = '$id'
+        ";
 
-            foreach ($eventArray['media'] as $mediaKey => $mediaValue) {
+        $event = $bdd->select($sqlEvents, 'fetch');
 
-                $event['media'][$mediaValue['meta_title']][] = new MediaModel($mediaValue);
+        $sqlMedia = "
+            SELECT m.name, m.path, mt.type, p.meta_title
+            
+            FROM event_media em
+                
+            INNER JOIN media				AS m		ON m.id = em.media_id
+            INNER JOIN page                 AS p        ON p.id = m.pages_id
+            INNER JOIN media_media_type		AS mmt		ON mmt.media_id = m.id
+            INNER JOIN media_type			AS mt 		ON mt.id = mmt.media_type_id
+            
+            WHERE p.meta_title = '$event[pageName]'
+        ";
+        $medias = $bdd->select($sqlMedia);
 
-            }
-
-            $events[$key] = $event;
-        }
+        $sqlMedia = "
+        SELECT m.name, m.path, mt.type, p.meta_title 
         
-        return $events;
-    }
+        FROM media m 
+            
+        INNER JOIN page                 AS p        on p.id = m.pages_id
+        INNER JOIN media_media_type     AS mmt      on mmt.media_id = m.id
+        INNER JOIN media_type           AS mt       on mt.id = mmt.media_type_id
+        
+        WHERE p.meta_title='$event[pageName]' OR p.meta_title='All'
+        ";
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+        $medias = $bdd->select($sqlMedia);
+
+        foreach ($medias as $media) :
+            $event['media'][$media['pageName']][$media['type']][] = new MediaModel($media);
+        endforeach;
+
+        return $event;
+    }
+    function searchMediaByType(string $type): false|array
     {
-        return $this->id;
-    }
+        $result = [];
+        foreach ($this->media as $mediaCat) :
 
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
+            foreach ($mediaCat as $key => $media) :
 
-    /**
-     * @return string
-     */
-    public function getStartDate(): string
-    {
-        return $this->start_date;
-    }
+                if ($key === $type) :
 
-    /**
-     * @param string $start_date
-     */
-    public function setStartDate(string $start_date): void
-    {
-        $this->start_date = $start_date;
-    }
+                    $result[] = $media;
 
-    /**
-     * @return string
-     */
-    public function getEndDate(): string
-    {
-        return $this->end_date;
-    }
 
-    /**
-     * @param string $end_date
-     */
-    public function setEndDate(string $end_date): void
-    {
-        $this->end_date = $end_date;
-    }
+                endif;
 
-    /**
-     * @return string
-     */
-    public function getImportance(): string
-    {
-        return $this->importance;
-    }
+            endforeach;
+        endforeach;
 
-    /**
-     * @param string $importance
-     */
-    public function setImportance(string $importance): void
-    {
-        $this->importance = $importance;
+        if (!empty($result)) {
+            return $result;
+        } else {
+            return false;
+        }
     }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     */
-    public function setTitle(string $title): void
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription(string $description): void
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMedia(): array
-    {
-        return $this->media;
-    }
-
-    /**
-     * @param array $media
-     */
-    public function setMedia(array $media): void
-    {
-        $this->media = $media;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMetaTitle(): string
-    {
-        return $this->meta_title;
-    }
-
-    /**
-     * @param string $meta_title
-     */
 }

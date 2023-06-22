@@ -1,21 +1,24 @@
-
 const gallery = document.getElementById("slider");
 const left = document.getElementsByClassName("left")[0];
-left.classList.add("disabled");
+
 const right = document.getElementsByClassName("right")[0];
 const images = 10;
 const imagesUrl = "https://picsum.photos/seed/{seed}/500/350";
-let selected = 0;
+var selected = 0;
+
+setInterval(() => {
+    nextImg();
+}, 2500);
 
 function init() {
-    for (let i = 0; i < images; i++) {
-        let imageWrapper = document.createElement("div");
+    for (var i = 0; i < images; i++) {
+        var imageWrapper = document.createElement("div");
         imageWrapper.id = `image_${i}`;
         imageWrapper.classList.add("wrapper");
         if (i === selected) {
             imageWrapper.classList.add("selected");
         }
-        let image = document.createElement("img");
+        var image = document.createElement("img");
         image.src = imagesUrl.replace(
             "{seed}",
             i + 1 + Math.floor(Math.random() * 100)
@@ -23,14 +26,20 @@ function init() {
         imageWrapper.appendChild(image);
         gallery.appendChild(imageWrapper);
 
+
     }
+    prevAct();
 }
 
 init();
 
 right.onclick = nextImg;
 function nextImg () {
-    selected++;
+    if (selected === images - 1) {
+        selected = 0;
+    } else {
+        selected++;
+    }
     if (selected > images - 1) {
         selected = images - 1;
     }
@@ -47,7 +56,7 @@ function prevImg () {
 }
 
 function handleSelection() {
-    let images = document.getElementsByClassName("wrapper");
+    var images = document.getElementsByClassName("wrapper");
     if (selected === images.length - 1) {
         right.classList.add("disabled");
     } else {
@@ -58,12 +67,20 @@ function handleSelection() {
     } else {
         left.classList.remove("disabled");
     }
-    for (let i = 0; i < images.length; i++) {
-        let img = images[i];
+    for (var i = 0; i < images.length; i++) {
+        var img = images[i];
         if (img.id === `image_${selected}`) {
             img.classList.add("selected");
         } else {
             img.classList.remove("selected");
         }
     }
+    prevAct();
+}
+
+function prevAct() {
+    var selectedImage = document.getElementById(`image_${selected}`);
+    var imageUrl = selectedImage.querySelector("img").src;
+    var selectedImageDiv = document.getElementById("selectedImage");
+    selectedImageDiv.innerHTML = `<img src="${imageUrl}" alt="Selected Image">`;
 }

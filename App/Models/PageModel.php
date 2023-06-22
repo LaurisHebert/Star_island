@@ -6,111 +6,101 @@ use Utils\Database\PdoDb;
 
 class PageModel extends Model
 {
-    private string $meta_title;
-    private string $title;
-    private string $description;
-    private array $media;
-    /**
-     * @return string
-     */
-    public function getMetaTitle(): string
-    {
-        return $this->meta_title;
-    }
-
-    /**
-     * @param string $meta_title
-     */
-    public function setMetaTitle(string $meta_title): void
-    {
-        $this->meta_title = $meta_title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     */
-    public function setTitle(string $title): void
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription(string $description): void
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMedia(): array
-    {
-        return $this->media;
-    }
-
-    /**
-     * @param array $media
-     */
-    public function setMedia(array $media): void
-    {
-        $this->media = $media;
-    }
-
-
+    public int $id;
+    public string $meta_title;
+    public string $meta_description;
+    public array $content;
+    public array $media;
     public function __construct(array $data)
     {
+        $this->id= $data['id'];
         $this->meta_title = $data['meta_title'];
-        $this->title = $data['title'];
-        $this->description = $data['description'];
+        $this->meta_description = $data['meta_description'];
+        $this->content = $data['content'];
         $this->media = $data['media'];
     }
 
-    static function getPageContent($data)
+    static function getPageContent($pageName)
     {
+        //Connexion à la BDD
         $bdd = PdoDb::getInstance();
 
-        // récupération des événements
+        // récupération des informations de la page
         $sqlPage = "
-        SELECT p.meta_title, c.title, c.description FROM page p 
-        INNER JOIN content c on c.page_id = p.id 
-        WHERE meta_title = '$data'
+        SELECT id,
+               meta_title, 
+               meta_description
+        
+        FROM page
+        
+        WHERE meta_title = '$pageName'
         ";
+        $page= $bdd->select($sqlPage, "fetch");
 
-        $page = $bdd->select($sqlPage, "fetch");
+        // récupération du contenu de la page
+        $sqlContent = " 
+        SELECT title,
+               description
+        
+        FROM content
+        
+        WHERE page_id = '$page[id]'
+        ";
+        $contents = $bdd->select($sqlContent);
 
-        $sqlPageMedia = "
-        SELECT m.name, m.path, mt.title, p.meta_title
+        //rangement du tableau content et création d'un objet ContentModel
+        foreach ($contents as $content) :
+            $page['content'][] = new ContentModel($content);
+        endforeach;
+
+        // récupération des médias de la page concerner et la page All
+        $sqlMedia = "
+        SELECT m.name,
+               m.path,
+               mt.type,
+               p.meta_title
+        
         FROM media m 
-        INNER JOIN media_media_type mmt on mmt.media_id = m.id
-        INNER JOIN media_type mt on mt.id = mmt.media_type_id
-        INNER JOIN page p on p.id = m.pages_id
-        WHERE p.meta_title='$data' OR p.meta_title='All'
+            
+        INNER JOIN page                 AS p        ON p.id = m.pages_id
+        INNER JOIN media_media_type     AS mmt      ON mmt.media_id = m.id
+        INNER JOIN media_type           AS mt       ON mt.id = mmt.media_type_id
+        
+        WHERE p.meta_title='$pageName'  OR          p.meta_title='All'
         ";
-        $page['media'] = $bdd->select($sqlPageMedia);
 
-        foreach ($page['media'] as $mediaKey => $mediaValue) {
+        $medias = $bdd->select($sqlMedia);
+        
+        //rangement du tableau média et création d'un objet MediaModel
+        foreach ($medias as $media) :
+            $page['media'][$media['meta_title']][$media['type']][$media['name']] = new MediaModel($media);
+        endforeach;
 
-            $page['media'][$mediaKey] = new MediaModel($mediaValue);
-
-        }
         return $page;
+    }
+    public function searchMediaByType(string $type, bool $actualPage = false): false|array
+    {
+        $result = [];
+        if ($actualPage):
+            $arrayToSearch[] = $this->media[$this->meta_title];
+        else:
+            $arrayToSearch = $this->media;
+        endif;
+        foreach ($arrayToSearch as $mediaCat) :
+            foreach ($mediaCat as $key => $mediaType) :
+
+                if ($key === $type) :
+                    foreach ($mediaType as $media) :
+                        $result[] = $media;
+                    endforeach;
+                endif;
+            endforeach;
+        endforeach;
+        if (!empty($result)) {
+            return $result;
+        }
+        else {
+            return false;
+        }
     }
 }

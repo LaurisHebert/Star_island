@@ -2,17 +2,25 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{pageTitle}</title>
     <meta name="description" content="{pageDescription}">
-    <link rel="stylesheet" href="./Css/bootstrap.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous" defer></script>
-    <link href="./Css/style_default.css" rel="stylesheet">
-    <script src="./Js/script.js" defer></script>
-</head>
-<body>
 
-<main>
+    <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+    <link href="./Css/bootstrap.min.css" rel="stylesheet">
+    <script src="./Js/bootstrap.min.js" defer></script>
+
+
+    <link href="./Css/style.css" rel="stylesheet">
+    <script src="./Js/script.js" defer></script>
+
+    <title>{pageTitle}</title>
+
+</head>
+
+<body data-bs-theme=dark >
+<?php require_once(__DIR__ . '/../../Views/Partials/header.tmpl.php'); ?>
     {pageContent}
-</main>
+<?php require_once(__DIR__ . '/../../Views/Partials/footer.tmpl.php'); ?>
 </body>
+
 </html>

@@ -1,16 +1,27 @@
-<footer>
-    <p>Ceci est un footer</p>
+<?php
+$logoPath = [];
+foreach ($data->searchMediaByType('logo') as $logo) :
+
+    switch ($logo->name) :
+        case 'PEGI18':
+            $logoPath['PEGI18'] = $logo->path;
+            break;
+        case 'contact':
+            $logoPath['contact'] = $logo->path;
+            break;
+    endswitch;
+endforeach;
+?>
+
+<footer class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="<?= $logoPath['contact'] ?>" alt="contact-icon" width="30" height="24">
+                Contact
+            </a>
+            <a class="navbar-brand" href="#">
+                <img src="./<?= $logoPath['PEGI18']?>" alt="PEGI18" width="24" height="30">
+            </a>
+        </div>
 </footer>
 
-
-$stocke = "
-SELECT * FROM event e
-INNER JOIN event_content 		AS ec 		ON ec.event_id = e.id
-INNER JOIN content 				AS c 		ON c.id = ec.content_id
-INNER JOIN event_media			AS em		ON em.event_id = e.id
-INNER JOIN media				AS m		ON m.id = em.media_id
-INNER JOIN media_media_type		AS mmt		ON mmt.media_id = m.id
-INNER JOIN media_type			AS mt 		ON mt.id = mmt.media_type_id
-
-WHERE start_date < NOW() AND end_date > NOW() AND importance = 'BIG' ORDER BY e.start_date DESC
-";
