@@ -17,7 +17,7 @@
 
 </head>
 
-<body data-bs-theme=dark >
+<body data-bs-theme=dark class="fs-3">
 <?php require_once(__DIR__ . '/../../Views/Partials/header.tmpl.php'); ?>
     {pageContent}
 <?php require_once(__DIR__ . '/../../Views/Partials/footer.tmpl.php'); ?>

@@ -1,22 +1,61 @@
-<div class="containerGallerie">
-    <h2 class="headerGalerie">GALERIE</h2>
-    <div id="selectedImage"></div>
-    <div class="gallery">
-        <div id="slider" class="slider">
+<div class="slider-container">
+
+    <div class="slider-content">
+
+        <div class="slider-single">
+            <img class="slider-single-image" src="https://picsum.photos/id/973/200/300" alt="1" />
+            <h1 class="slider-single-title">Through the Mountains</h1>
+            <a class="slider-single-likes" href="javascript:void(0);">
+                <i class="fa fa-heart"></i>
+                <p>1,247</p>
+            </a>
         </div>
-        <div class="arrows">
-            <div class="left">
-                <button class="carousel-control-prev" type="button">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-            </div>
-            <div class="right">
-                <button class="carousel-control-next" type="button">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
+
+        <div class="slider-single">
+            <img class="slider-single-image" src="https://picsum.photos/id/974/200/300" alt="2" />
+            <h1 class="slider-single-title">Through the Mountains</h1>
+            <a class="slider-single-likes" href="javascript:void(0);">
+                <i class="fa fa-heart"></i>
+                <p>1,247</p>
+            </a>
+        </div>
+
+        <div class="slider-single">
+            <img class="slider-single-image" src="https://picsum.photos/id/975/200/300" alt="3" />
+            <h1 class="slider-single-title">Through the Mountains</h1>
+            <a class="slider-single-likes" href="javascript:void(0);">
+                <i class="fa fa-heart"></i>
+                <p>1,247</p>
+            </a>
+        </div>
+
+
+        <div class="slider-single">
+            <img class="slider-single-image" src="https://picsum.photos/id/976/200/300" alt="4" />
+            <h1 class="slider-single-title">Through the Mountains</h1>
+            <a class="slider-single-likes" href="javascript:void(0);">
+                <i class="fa fa-heart"></i>
+                <p>1,247</p>
+            </a>
+        </div>
+
+
+        <div class="slider-single">
+            <img class="slider-single-image" src="https://picsum.photos/id/977/200/300" alt="5" />
+            <h1 class="slider-single-title">Through the Mountains</h1>
+            <a class="slider-single-likes" href="javascript:void(0);">
+                <i class="fa fa-heart"></i>
+                <p>1,247</p>
+            </a>
+        </div>
+
+        <div class="slider-single">
+            <img class="slider-single-image" src="https://picsum.photos/id/978/200/300" alt="6" />
+            <h1 class="slider-single-title">Through the Mountains</h1>
+            <a class="slider-single-likes" href="javascript:void(0);">
+                <i class="fa fa-heart"></i>
+                <p>1,247</p>
+            </a>
         </div>
     </div>
 </div>
