@@ -13,7 +13,7 @@ foreach ($data->searchMediaByType('logo') as $logo) :
 endforeach;
 ?>
 
-<footer class="navbar">
+<footer class="navbar fixed-bottom">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <img src="<?= $logoPath['contact'] ?>" alt="contact-icon" width="30" height="24">

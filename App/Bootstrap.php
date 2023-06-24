@@ -9,14 +9,15 @@ unset($_SESSION['events']);
 $_SESSION['events'] = EventModel::getEvents();
 $bigEvent = null;
 
-foreach ($_SESSION['events'] as $event) :
-    if ($event['pageName'] == 'BigEvent') {
+foreach ( $_SESSION['events'] as $event) :
+    if ($event['meta_title'] == 'BigEvent' && 1==2) {
         $bigEvent = $event['id'];
     }
 endforeach;
 
-if (1==2 && $bigEvent !== null) {
+if ($bigEvent !== null) {
     $bigEventContent = new EventModel(EventModel::getEvent($bigEvent));
+    $_SESSION['bigEvent'] = $bigEventContent->end_date;
 
     $bigEvent = new Page();
     echo $bigEvent->display($bigEventContent);

@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="description" content="{pageDescription}">
 
-    <link href="./Css/bootstrap.css" rel="stylesheet">
-    <script src="./Js/bootstrap.js" defer></script>
+    <link href="./Css/bootstrap.min.css" rel="stylesheet">
+    <script src="./Js/bootstrap.min.js" defer></script>
 
-    <link href="./Css/style_teaser.css" rel="stylesheet">
-    <script defer src="./Js/script_bigEvents.js"></script>
+    <script defer src="./Js/script.js"></script>
 
     <title>{pageTitle}</title>
 </head>
-<body>
+<body data-bs-theme=dark class="fs-3">
     {pageContent}
-<?php require_once(__DIR__ . '/../../Views/Partials/nav.tmpl.php'); ?>
 </body>
 </html>

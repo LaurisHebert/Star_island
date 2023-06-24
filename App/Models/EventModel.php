@@ -95,31 +95,33 @@ class EventModel extends Model
         $medias = $bdd->select($sqlMedia);
 
         foreach ($medias as $media) :
-            $event['media'][$media['pageName']][$media['type']][] = new MediaModel($media);
+            $event['media'][$media['meta_title']][$media['type']][] = new MediaModel($media);
         endforeach;
 
         return $event;
     }
-    function searchMediaByType(string $type): false|array
+    public function searchMediaByType(string $type, bool $actualPage = false): false|array
     {
         $result = [];
-        foreach ($this->media as $mediaCat) :
-
-            foreach ($mediaCat as $key => $media) :
+        if ($actualPage):
+            $arrayToSearch[] = $this->media[$this->meta_title];
+        else:
+            $arrayToSearch = $this->media;
+        endif;
+        foreach ($arrayToSearch as $mediaCat) :
+            foreach ($mediaCat as $key => $mediaType) :
 
                 if ($key === $type) :
-
-                    $result[] = $media;
-
-
+                    foreach ($mediaType as $media) :
+                        $result[] = $media;
+                    endforeach;
                 endif;
-
             endforeach;
         endforeach;
-
         if (!empty($result)) {
             return $result;
-        } else {
+        }
+        else {
             return false;
         }
     }

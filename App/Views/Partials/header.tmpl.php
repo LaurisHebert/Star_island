@@ -1,7 +1,7 @@
-<header class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+<header class="navbar navbar-expand-lg bg-body-tertiary sticky-top mb-5">
     <nav id="navBar" class="overflow-y-visible container-fluid ">
-        <a id="test2" class="navbar-brand" href="/projets/Star_island/public/">
-            <img id="test" src="./<?= $data->searchMediaByType('mainLogo')['0']->path ?>" class=" d-inline-block align-text-top" alt="">
+        <a class="navbar-brand d-flex align-items-center" href="/projets/Star_island/public/" style="height: 1px">
+            <img src="./<?= $data->searchMediaByType('mainLogo')['0']->path ?>" class="mt-5" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                 aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,19 +23,18 @@
                 </li>
 
             </ul>
-            <ul class="navbar-nav d-table-row">
+            <ul class="navbar-nav d-table-row fs-6">
                 <li class="nav-item">
                     <a class="nav-link" href="/projets/Star_island/public/">Tutoriel</a>
                 </li>
                 <?php if (!empty($_SESSION['events'])): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Events
+                           aria-expanded="false">Events
                         </a>
                         <ul class="dropdown-menu">
                             <?php foreach ($_SESSION['events'] as $event) : ?>
-                                <li><a class="dropdown-item" href="/projets/Star_island/public/?page=event&<?= $event['id'] ?>"><?= $event['title'] ?></a></li>
+                                <li><a class="dropdown-item" href="/projets/Star_island/public/?page=Event&i=<?= $event['id'] ?>"><?= $event['title']?></a></li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
