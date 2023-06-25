@@ -1,5 +1,6 @@
-let d = document;
-let countDown = d.querySelector('#countDown');
+const d = document;
+const countDown = d.querySelector('#countDown');
+const listRoles = d.querySelector("#listRoles")
 
 if (countDown) {
     let x = setInterval(function () {
@@ -16,4 +17,11 @@ if (countDown) {
         countDown.innerHTML = days + 'J ' + hours + 'H ' + minutes + 'M ' + seconds + 'S ';
     }, 1000);
 }
-
+if (listRoles){
+    for (let role in staff) {
+        let newListRole = d.createElement("li")
+        newListRole.classList.add("list-group-item")
+        newListRole.textContent = role
+        listRoles.appendChild(newListRole)
+    }
+}
