@@ -6,20 +6,60 @@ use Utils\Database\PdoDb;
 
 class TeamModel extends Model
 {
-    private int $id;
-    private string $role;
-    private string $nickname;
-    private array $media;
+    public int $id;
+    public string $meta_title;
+    public string $meta_description;
+    public array $content;
 
-    public function __construct($who)
+    public function __construct()
+    {
+        $this->content = [];
+    }
+
+    static function getTeam($teamRole = null): array
     {
         $bdd = PdoDb::getInstance();
-        $sql = "SELECT DISTINCT m.*, m_t.* FROM team t 
-            INNER JOIN team_media t_m ON t.id = t_m.team_id 
-            INNER JOIN media m on t_m.media_id = m.id 
-            INNER JOIN media_media_type m_m_t ON m.id = m_m_t.media_id 
-            INNER JOIN media_type m_t ON m_m_t.media_type_id = m_t.id
-            WHERE t.nickname = '$who'";
-        $bdd->select($sql);
+        $where = null;
+
+        if (!$teamRole === null){
+            $where = "WHERE role = '$teamRole'";
+        }
+        $sqlTeam = "
+        SELECT *
+        
+        FROM team
+        
+        $where";
+
+        $teamArray = $bdd->select($sqlTeam);
+
+        foreach ($teamArray as $key => $team) {
+        $sqlTeamMedia = "
+        SELECT m.name,
+               m.path,
+               mt.type,
+               p.meta_title
+               
+        
+        FROM media m 
+            
+        INNER JOIN team_media           AS tm       ON tm.media_id = m.id
+        INNER JOIN team                 AS t        ON t.id = tm.team_id
+        INNER JOIN media_type           AS mt       ON mt.id = m.media_type_id
+        INNER JOIN page                 AS p        ON p.id = m.pages_id
+        
+        WHERE tm.team_id='$team[id]'
+        ";
+
+        $teamMedias = $bdd->select($sqlTeamMedia);
+        foreach ($teamMedias as $teamMedia) :
+
+            $teamArray[$key]['media'][] = new MediaModel($teamMedia);
+
+        endforeach;
+
+        }
+
+        return $teamArray;
     }
 }

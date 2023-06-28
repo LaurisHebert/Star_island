@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <!-- Popper JS -->
@@ -18,11 +19,17 @@
 
     <!-- Changement de la description modifié par le contrôleur -->
     <meta name="description" content="{pageDescription}">
+
 </head>
     <!-- laisser le choix pour le darkmode -->
-    <body data-bs-theme=dark class="fs-3">
+    <body data-bs-theme=dark class="fs-4">
+
         <?php require_once(__DIR__ . '/../../Views/Partials/header.tmpl.php'); ?>
+
             {pageContent}
+
         <?php require_once(__DIR__ . '/../../Views/Partials/footer.tmpl.php'); ?>
+
     </body>
+
 </html>

@@ -1,4 +1,4 @@
-<header class="navbar navbar-expand-lg bg-body-tertiary sticky-top mb-5">
+<header class="opacity-50 navbar navbar-expand-lg bg-body-tertiary sticky-top mb-5">
     <nav id="navBar" class="overflow-y-visible container-fluid ">
         <a class="navbar-brand d-flex align-items-center" href="/projets/Star_island/public/" style="height: 1px">
             <img src="./<?= $data->searchMediaByType('mainLogo')['0']->path ?>" class="mt-5" alt="">

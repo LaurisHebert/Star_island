@@ -1,8 +1,10 @@
 <?php
 
 use Controllers\Page;
+use Controllers\Team;
 use Models\EventModel;
 use Models\PageModel;
+use Models\TeamModel;
 
 /*
  * Le routeur réceptionne des variables $_POST, $_GET ou AJAX fetch.
@@ -18,7 +20,7 @@ session_start();
 $_GP = array_merge($_POST, $_GET);
 // On détecte les entrées de $_GP pour router vers le contrôleur ad hoc.
 if (count($_GP)) :
-    if (!$_SESSION['bigEvent']):
+    if ($_SESSION['bigEvent']):
         header("Location: __DIR__ ./../../public/index.php");
         exit();
     else :
@@ -34,6 +36,12 @@ if (count($_GP)) :
                 $pageContent = new PageModel($pageContent);
                 $galerie = new Page();
                 echo $galerie->display($pageContent);
+                break;
+                case 'Team':
+                $team = TeamModel::getTeam();
+                $team = new TeamModel($team);
+                $teamPage = new Team();
+                echo $teamPage->display($team);
                 break;
             case 'Event':
                 $id = intval($_GP['i']);

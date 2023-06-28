@@ -13,4 +13,29 @@ class Model
         }
         return $allValues;
     }
+    public function searchMediaByType(string $type, bool $actualPage = false): false|array
+    {
+        $result = [];
+        if ($actualPage):
+            $arrayToSearch[] = $this->media[$this->meta_title];
+        else:
+            $arrayToSearch = $this->media;
+        endif;
+        foreach ($arrayToSearch as $mediaCat) :
+            foreach ($mediaCat as $key => $mediaType) :
+
+                if ($key === $type) :
+                    foreach ($mediaType as $media) :
+                        $result[] = $media;
+                    endforeach;
+                endif;
+            endforeach;
+        endforeach;
+        if (!empty($result)) {
+            return $result;
+        }
+        else {
+            return false;
+        }
+    }
 }

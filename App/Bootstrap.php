@@ -14,7 +14,9 @@ foreach ( $_SESSION['events'] as $event) :
         $bigEvent = $event['id'];
     }
 endforeach;
+if (isset($bigEvent) && !empty($bigEvent)){
 
+}
 if ($bigEvent !== null) {
     $bigEventContent = new EventModel(EventModel::getEvent($bigEvent));
     $_SESSION['bigEvent'] = $bigEventContent->end_date;

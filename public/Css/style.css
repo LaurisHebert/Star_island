@@ -1,0 +1,42 @@
+body{
+    background-image: url("../../public/Imgs/gta_decors1.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.carousel-inner{
+    height: 80%;
+}
+#carouselGlobal{
+    height: 100vh;
+}
+.gradient-top,
+.gradient-bot,
+.gradient {
+    position: relative;
+}
+
+.gradient-top::before,
+.gradient::before,
+.gradient-bot::after,
+.gradient::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 5vh;
+}
+
+.gradient-top::before,
+.gradient::before {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.gradient-bot::after,
+.gradient::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+}
+

@@ -11,9 +11,10 @@ class PageModel extends Model
     public string $meta_description;
     public array $content;
     public array $media;
+
     public function __construct(array $data)
     {
-        $this->id= $data['id'];
+        $this->id = $data['id'];
         $this->meta_title = $data['meta_title'];
         $this->meta_description = $data['meta_description'];
         $this->content = $data['content'];
@@ -35,7 +36,7 @@ class PageModel extends Model
         
         WHERE meta_title = '$pageName'
         ";
-        $page= $bdd->select($sqlPage, "fetch");
+        $page = $bdd->select($sqlPage, "fetch");
 
         // récupération du contenu de la page
         $sqlContent = " 
@@ -50,7 +51,7 @@ class PageModel extends Model
 
         //rangement du tableau content et création d'un objet ContentModel
         foreach ($contents as $content) :
-            $page['content'][] = new ContentModel($content);
+                $page['content'][$content['title']] = new ContentModel($content);
         endforeach;
 
         // récupération des médias de la page concerner et la page All
@@ -63,14 +64,13 @@ class PageModel extends Model
         FROM media m 
             
         INNER JOIN page                 AS p        ON p.id = m.pages_id
-        INNER JOIN media_media_type     AS mmt      ON mmt.media_id = m.id
-        INNER JOIN media_type           AS mt       ON mt.id = mmt.media_type_id
+        INNER JOIN media_type           AS mt       ON mt.id = m.media_type_id
         
         WHERE p.meta_title='$pageName'  OR          p.meta_title='All'
         ";
 
         $medias = $bdd->select($sqlMedia);
-        
+
         //rangement du tableau média et création d'un objet MediaModel
         foreach ($medias as $media) :
             $page['media'][$media['meta_title']][$media['type']][$media['name']] = new MediaModel($media);
@@ -78,29 +78,5 @@ class PageModel extends Model
 
         return $page;
     }
-    public function searchMediaByType(string $type, bool $actualPage = false): false|array
-    {
-        $result = [];
-        if ($actualPage):
-            $arrayToSearch[] = $this->media[$this->meta_title];
-        else:
-            $arrayToSearch = $this->media;
-        endif;
-        foreach ($arrayToSearch as $mediaCat) :
-            foreach ($mediaCat as $key => $mediaType) :
 
-                if ($key === $type) :
-                    foreach ($mediaType as $media) :
-                        $result[] = $media;
-                    endforeach;
-                endif;
-            endforeach;
-        endforeach;
-        if (!empty($result)) {
-            return $result;
-        }
-        else {
-            return false;
-        }
-    }
 }
