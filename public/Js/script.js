@@ -21,82 +21,72 @@ if (countDown) {
         countDown.innerHTML = days + 'J ' + hours + 'H ' + minutes + 'M ' + seconds + 'S ';
     }, 1000);
 }
+
 if (listRoles && staffArray) {
-    for (let role in staffArray) {
-        let newListRole = d.createElement("li")
-        newListRole.classList.add("list-group-item")
-        newListRole.textContent = role;
-        newListRole.addEventListener("click", ev => {
-            console.log(newListRole.textContent)
-        })
-        listRoles.appendChild(newListRole)
-    }
-}
-if (staffDisplay) {
-    console.log(staffArray)
-
-    function displayTeam(preciseRole = null) {
-        for (let role in staffArray) {
-            for (let member in staffArray[role]) {
-                nbr++;
-                if (preciseRole === null) {
-                    if (nbr === 1 || nbr === 6) {
-                        emptyDiv()
-                    }
-                    addMember(staffArray[role][member])
-                } else if (preciseRole === role) {
-                    console.log(nbr)
-                    if (nbr === 1 || nbr === 6) {
-                        console.log('emptydiv')
-                        emptyDiv()
-                    }
-                    addMember(staffArray[role][member])
-                }
-                if (nbr === 11) {
-                    nbr = 0
-                }
-            }
-
+    let addedRoles = [];
+    for (let key in staffArray) {
+        let role = staffArray[key].role;
+        if (!addedRoles.includes(role)) {
+            let newListRole = d.createElement("li")
+            newListRole.classList.add("list-group-item")
+            newListRole.textContent = role;
+            newListRole.addEventListener("click", ev => {
+                fetch('/projets/Star_island/public/', {
+                    method: 'POST', body: JSON.stringify({role: newListRole.textContent})
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Traitement des données JSON
+                        displayTeam(data.content);
+                    })
+            });
+            listRoles.appendChild(newListRole)
+            addedRoles.push(role)
         }
-        emptyDiv()
-
     }
-
-    displayTeam()
-
-    function addMember(member) {
-        let newMemberDiv = d.createElement('div')
-        newMemberDiv.classList.add('col-2')
-        let newMemberPicture = d.createElement('img');
-        newMemberPicture.classList.add("img-thumbnail", "rounded-circle")
-        newMemberPicture.src = "https://www.w3schools.com/w3css/img_avatar.png";
-        newMemberPicture.style = "height: 120px; width: 120px"
-        let newMemberName = d.createElement('p');
-        let name = d.createTextNode(member.nickname);
-        newMemberName.appendChild(name);
-        let newMemberRole = d.createElement('p');
-        let role = d.createTextNode(member.role);
-        newMemberRole.appendChild(role)
-        newMemberDiv.appendChild(newMemberPicture)
-        newMemberDiv.appendChild(newMemberName);
-        newMemberDiv.appendChild(newMemberRole)
-        staffDisplay.appendChild(newMemberDiv)
+    displayTeam(staffArray)
+}
+function displayTeam(Array) {
+    if (!Array){
+        Array = staffArray;
     }
-
-    function emptyDiv() {
-        let emptyDiv = d.createElement("div");
-        emptyDiv.classList.add('col-1')
-        staffDisplay.appendChild(emptyDiv)
+    staffDisplay.innerHTML =""
+    nbr = 0;
+    console.log(Array)
+    for (let key in Array) {
+        const member = Array[key];
+        nbr++;
+        if (nbr === 1 || nbr === 6) {
+            emptyDiv()
+        }
+        addMember(member)
+        if (nbr === 11) {
+            nbr = 0
+        }
     }
+    emptyDiv()
 }
 
-//<div className="col-2">
-//  <img src="https://www.w3schools.com/w3css/img_avatar.png" alt="Avatar"
-//  class="img-thumbnail rounded-circle" style="height: 120px; width: 120px">
-//  <p>role</p>
-//  <p>nickname</p>
-//  <p>overlay</p>
-//</div>
+function addMember(member) {
+    let newMemberDiv = d.createElement('div')
+    newMemberDiv.classList.add('col-2')
+    let newMemberPicture = d.createElement('img');
+    newMemberPicture.classList.add("img-thumbnail", "rounded-circle")
+    newMemberPicture.src = "https://www.w3schools.com/w3css/img_avatar.png";
+    newMemberPicture.style = "height: 120px; width: 120px"
+    let newMemberName = d.createElement('p');
+    let name = d.createTextNode(member.nickname);
+    newMemberName.appendChild(name);
+    newMemberDiv.appendChild(newMemberPicture)
+    newMemberDiv.appendChild(newMemberName);
+    staffDisplay.appendChild(newMemberDiv)
+}
+
+function emptyDiv() {
+    let emptyDiv = d.createElement("div");
+    emptyDiv.classList.add('col-1')
+    staffDisplay.appendChild(emptyDiv)
+}
 
 if (comments) {
     comments.forEach(comment => {

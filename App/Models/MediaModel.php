@@ -2,7 +2,7 @@
 
 namespace Models;
 
-class MediaModel extends Model
+class MediaModel
 {
     public string $name;
     public string $path;

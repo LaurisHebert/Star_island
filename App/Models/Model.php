@@ -15,6 +15,7 @@ class Model
     }
     public function searchMediaByType(string $type, bool $actualPage = false): false|array
     {
+
         $result = [];
         if ($actualPage):
             $arrayToSearch[] = $this->media[$this->meta_title];

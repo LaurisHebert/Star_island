@@ -26,6 +26,7 @@ class PageModel extends Model
         //Connexion à la BDD
         $bdd = PdoDb::getInstance();
 
+
         // récupération des informations de la page
         $sqlPage = "
         SELECT id,

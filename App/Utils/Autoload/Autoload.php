@@ -14,5 +14,6 @@ require_once __DIR__ . '/../../Models/Model.php';
 require_once __DIR__ . '/../../Models/ContentModel.php';
 require_once __DIR__ . '/../../Models/EventModel.php';
 require_once __DIR__ . '/../../Models/MediaModel.php';
+require_once __DIR__ . '/../../Models/MemberModel.php';
 require_once __DIR__ . '/../../Models/PageModel.php';
 require_once __DIR__ . '/../../Models/TeamModel.php';

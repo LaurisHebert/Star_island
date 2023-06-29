@@ -40,7 +40,7 @@ if (count($_GP)) :
                 case 'Team':
                 $team = TeamModel::getTeam();
                 $team = new TeamModel($team);
-                $teamPage = new Team();
+                $teamPage = new Page();
                 echo $teamPage->display($team);
                 break;
             case 'Event':
@@ -71,4 +71,11 @@ endif;
     $data = json_decode($json);
 // On route vers le controller "Annonces" et la méthode d'affichage d'une annonce "annonceDisplay".
     if (!empty($data)) :
+        if ($data->role){
+
+            $filteredMembers = TeamModel::getTeam($data->role);
+            echo json_encode($filteredMembers);
+            exit();
+        }
+        
     endif;

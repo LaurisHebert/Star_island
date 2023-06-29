@@ -15,7 +15,8 @@ class Controller
      * @return array|bool|string
      */
     public function render(string $layout, string $view, mixed $data = null): array|bool|string
-    {   // Séparation du String récupérer à chaque points et les stocks dans un tableau
+    {
+        // Séparation du String récupérer à chaque points et les stocks dans un tableau
         $layout_ar = explode('.', $layout);
         // Ouverture d'une mise en tampon du 'require' du layout
         ob_start();
